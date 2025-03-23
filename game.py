@@ -20,9 +20,29 @@ def draw():
     global items,current_level,game_over,game_complete
     screen.clear()
     screen.blit('background', (0,0))
+    if game_over: 
+        display_msg("GAME OVER","Try Again")
+    elif game_complete:
+        display_msg("YOU WON","Good Job")
+    else:
+        for item in items:
+            item.draw()
+
 
 def update():
-    pass
+    global items
+    if len(items) ==0:
+        items = make_items(current_level)
+
+def make_items(extra_items):
+    items_to_create= get_option(extra_items)
+    new_items= create_items(items_to_create)
+    layout_items(new_items)
+    animate_items(new_items)
+    return new_items
+
+
+    
 
 
 def get_option(extra_items):
@@ -52,7 +72,7 @@ def animate_items(items_to_animate):
     for item in items_to_animate:
         duration = START_SPEED - current_level
         item.anchor = ("center", "bottom")
-        animation = animate(item, duration=duration, on_finished=handle_game_over(),y=HEIGHT)
+        animation = animate(item, duration=duration, on_finished=handle_game_over,y=HEIGHT)
         animations.append(animation)
 
 def handle_game_over():
@@ -86,7 +106,7 @@ def stop_animations(animations_to_stop):
 def display_msg(heading_text, sub_text):
     screen.draw.text(heading_text, fontsize=60, center=CENTER, color="black")
     screen.draw.text(sub_text, fontsize=30, center=(CENTER_X,CENTER_Y +30 ),color="black")
-    
+
 
                 
 
